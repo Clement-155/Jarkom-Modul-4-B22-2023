@@ -571,3 +571,75 @@ Berikut foto dari hasil tes di atas
       ![Alt text](<Gambar/GNS3/Ping Test/T14.JPG>)
        ![Alt text](<Gambar/GNS3/Ping Test/T15.JPG>)
 ![Alt text](<Gambar/GNS3/Ping Test/T16.JPG>)
+
+
+=======================================================
+=======================================================
+
+## CPT / CIDR
+
+Berikut merupakan topologi pada CPT dan juga terdapat beberapa hasil testing untuk:
+- sendPacket(GranzChannel,Eisen)
+- sendPacket(Aura,LaubHills)
+- sendPacket(SchweMountains,GrobeForest)
+- sendPacket(RoyalCapital,RiegerlCanyon)
+- sendPacket(AppetitRegion,GrobeForest)
+
+![topologicpt](<Gambar/CPT/CPT dan testing.png>)
+
+Sebelumnya, dilakukan penggabungan subnet terlebih dahulu dari subnet kecil menjadi satu kesatuan.
+Seperti pada gambar berikut yang menggabungkan subnet dua subnet A* menjadi subnet B*
+
+![subnetgabungan](<Gambar/CPT/subnet gabungan.jpeg>)
+
+Penggabungan subnet juga dilakukan untuk mendapatkan total kebutuhan ip pada satu kesatuan topologi jaringan tersebut. Sehingga nantinya akan diketahui berapa netmask untuk topologi tersebut.
+
+![penggabunganI](<Gambar/CPT/PenggabunganI.png>)
+
+![penggabunganII](<Gambar/CPT/PenggabunganII.png>)
+
+Dan terus dilakukan sampai menjadi satu kesatuan...
+
+![penggabunganfinal](<Gambar/CPT/PenggabunganIII-VI.png>)
+
+<br>
+Dari gambar di atas diketahui bahwa untuk topologi jaringan ini dibutuhkan netmask /17. Setelah itu netmask tersebut akan dibagi-bagi berdasarkan penggabungan yang telah dilakukan menggunakan pohon CIDR. Seperti pada gambar berikut...
+
+![pohoncidr](<Gambar/CPT/PohonCIDR.png>)
+
+Dan hasil dari pembagian ip di atas, meliputi NID, netmask, dan broadcastnya dimasukkan kembali ke masing-masing subnet terkecil tadi (A*)
+
+![pembagianip](<Gambar/CPT/PembagianIPCIDR.png>)
+
+### Subneting CPT
+Berikut contoh subneting yang dilakukan pada subnet A5 dimana pada subnet tersebut terdapat Router `Fern`, Client `LaubHills`, dan client `AppetitRegion`. Netmask pada subnet A5 adalah `255.255.248.0` dan NID yang didapatkan dari pembagian IP melalui pohon CIDR adalah `192.189.72.0`.
+Sehingga untuk konfigurasinya adalah sebagai berikut...
+
+![IPsubnetA5](<Gambar/CPT/IPsubnetA5.png>)
+
+Karena untuk subnet A5 mendapatkan NID `192.189.72.0`, maka bisa dilakukan pembagian IP pada masing-masing node yaitu: `192.189.72.1` untuk Router `Fern`, `192.189.72.2` untuk Client `LaubHills`, dan `192.189.72.3` untuk Client `AppetitRegion`. Dan kedua client tersebut gatewaynya menggunakan ip dari router karena yang menghubungkan dengan subnet-subnet yang lainnya.
+
+### Routing CPT
+Berikut adalah contoh router pada router `Fern`, dan router-router lainnya yang berdekatan. Karena Router `Fern` merupakan router ujung, maka hanya ada satu routing pada router `Fern` yaitu *default routing* dengan Next Hop atau Gatewaynya yaitu IP dari interface Router `Flamme` yang terhubung dengan Router `Fern`.
+
+![routingfern](<Gambar/CPT/RoutingFern.png>)
+
+![interfaceflamme](<Gambar/CPT/interfaceFlamme.png>)
+
+Kemudian dilanjutkan dengan routing pada router `Flamme` yang menghubungkan Router `Fern` dan Router `Himmel` serta *default routing* dengan Next Hopnya yaitu IP dari interface Router `Frieren` yang terhubung dengan Router `Flamme`.
+
+![routingflamme](<Gambar/CPT/RoutingFlamme.png>)
+
+![interfacefrieren](<Gambar/CPT/interfaceFrieren.png>)
+
+Kemudian dilanjut lagi dengan routing pada router `Frieren` yang menghubungkan Router `Flamme`, Router `Fern`, dan Router `Himmel` serta *default routing* dengan Next Hopnya yaitu IP dari interface Router `Aura` yang terhubung dengan Router `Frieren`.
+
+![routingfrieren](<Gambar/CPT/RoutingFrieren.png>)
+
+![interfaceaura](<Gambar/CPT/interfaceAura.png>)
+
+Dan pada Router `Aura` yang merupakan induk router karena langsung berada di bawah `Cloud0` tidak ada *default routing* melainkan pada routingnya menghubungkan semua router yang ada termasuk Router `Frieren`, Router `Flamme`, Router `Fern`, Router `Himmel`, melalui interface Router `Frieren` yang terhubung dengan ROuter `Aura`.
+
+![routingaura](<Gambar/CPT/RoutingAura.png>)
+
+# *Terima Kasih*
