@@ -35,7 +35,13 @@ Subnet hasil pembagian lalu dibagi sesuai kebutuhan (tidak urut kode subnet)
 
 ### Interface
 
-Subnet yang sudah dibagi digunakan dalam penulisan interface untuk GNS3 sebagai berikut :
+Subnet yang sudah dibagi digunakan dalam penulisan interface dengan cara
+
+1. Dari Aura ke client/server (leaf node), beri interface router yang dekat dengan Aura ip subnet + 1.
+2. Jika ada interface yang butuh 1 ip, beri terlebih dahulu untuk ip selanjutnya.
+3. Terakhir, jika ada beri ip untuk node client yang melambangkan banyak client.
+
+Hasil untuk GNS3 adalah sebagai berikut :
 
 #### A1 - A3Frieren - A9Aura, A20 - A21
 
